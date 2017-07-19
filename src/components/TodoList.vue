@@ -1,8 +1,8 @@
 <template>
 	<div id="todoListContainer">
 		<div class="new-todo" v-bind:class="{'active': searchActive}">
-			<icon name="check"></icon>
-			<input type="text" name="newTodo" placeholder="What do you need to do?" @focus="searchActive = true" @blur="searchActive = false">
+			<icon name="plus"></icon>
+			<input type="text" name="newTodo" @focus="searchActive = true" @blur="searchActive = false">
 		</div>
 		<hr>
 		<div class="todo-list">
@@ -55,6 +55,8 @@ export default {
 	background: rgba(#fff, .8);
 
 	border-radius: 1rem;
+
+	overflow: hidden;
 
 	hr {
 		border: none;
