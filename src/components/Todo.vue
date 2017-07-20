@@ -26,8 +26,8 @@ export default {
 				let current = new Date()
 				current = current.getTime()
 				let stamp = this.todo.timestamp.getTime()
-				let week = (1000 * 60 * 24 * 7)
-				let month = (1000 * 60 * 24 * 7 * 4)
+				let week = (1000 * 60 * 60 * 24 * 7)
+				let month = (1000 * 60 * 60 * 24 * 7 * 4)
 
 				// TODO: Use moment
 				if (current - stamp > month) {
