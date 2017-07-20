@@ -7,7 +7,7 @@
 		<div class="add-todo-hint" v-bind:class="{'show': newTodoTitle.length > 0}">Press <kbd>Enter</kbd> to add your todo</div>
 		<hr>
 		<div class="todo-list">
-			<div v-for="(todo, i) in sortedTodos.active" :key="i" class="todo-container">
+			<div v-for="(todo, i) in sortedTodos.active" :key="i" class="todo-container active">
 				<Todo v-bind:todo="todo" class="todo"></Todo>
 				<div class="todo-functions">
 					<button class="todo-function todo-remove" @click="function() {removeTodo(todo.index)}"><icon name="close" scale="0.75"></icon></button>
@@ -15,7 +15,7 @@
 				</div>
 			</div>
 			<hr v-if="sortedTodos.done.length > 0 && sortedTodos.active.length > 0">
-			<div v-for="(todo, i) in sortedTodos.done" :key="i" class="todo-container">
+			<div v-for="(todo, i) in sortedTodos.done" :key="i + sortedTodos.active.length" class="todo-container done">
 				<Todo v-bind:todo="todo" class="todo"></Todo>
 				<div class="todo-functions">
 					<button v-if="!todo.editing" class="todo-function todo-remove" @click="function() {removeTodo(todo.index)}"><icon name="close" scale="0.75"></icon></button>
@@ -32,6 +32,7 @@
 				</p>
 			</div>
 		</div>
+		<hr>
 		<div class="functions" v-if="!noTodos">
 			<span class="function remove-done" @click="removeDone">
 				Remove done
@@ -63,8 +64,6 @@ export default {
 		addTodo: function() {
 			let processedTitle = this.newTodoTitle.trim()
 			if (processedTitle.length > 0) {
-				console.log(processedTitle)
-
 				this.todos.push({
 					done: false,
 					title: processedTitle,
@@ -211,6 +210,14 @@ export default {
 
 		.todo-container {
 			display: flex;
+
+			&.active {
+				//
+			}
+
+			&.done {
+				background: $success;
+			}
 
 			&:hover {
 				.todo-functions {

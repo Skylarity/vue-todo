@@ -9,7 +9,7 @@
 			<input v-if="todo.editing" @keyup.enter="finishEditing" class="title-edit" type="text" v-model="todo.title">
 			<div class="date">added {{ todoDate }}</div>
 		</div>
-		<icon class="warn" name="exclamation-triangle" scale="2" v-if="status === 'warning' || status === 'danger'"></icon>
+		<icon class="warn" name="exclamation-triangle" scale="2" v-if="!todo.editing && (status === 'warning' || status === 'danger')"></icon>
 	</div>
 </template>
 
@@ -155,10 +155,12 @@ export default {
 			display: none;
 		}
 
+		$size: 24px;
+
 		.check {
 			position: relative;
-			width: 20px;
-			height: 20px;
+			width: $size;
+			height: $size;
 			border-radius: 50%;
 			border: 4px solid rgba(#444, .2);
 			box-sizing: border-box;
@@ -167,8 +169,7 @@ export default {
 		}
 
 		input:checked + .check {
-			// border: 10px solid rgba(#fff, .9);
-			border: 10px solid rgba(#444, .6);
+			border: ($size / 2) solid rgba(#444, .6);
 		}
 
 		.check .fa-icon {
