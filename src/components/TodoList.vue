@@ -1,9 +1,10 @@
 <template>
 	<div id="todoListContainer">
 		<div class="new-todo" v-bind:class="{'active': searchActive}">
-			<icon name="plus"></icon>
-			<input type="text" name="newTodo" @focus="searchActive = true" @blur="searchActive = false">
+			<icon name="check"></icon>
+			<input type="text" name="newTodo" @focus="searchActive = true" @blur="searchActive = false" v-model="newTodoTitle" v-on:keyup.enter="addTodo">
 		</div>
+		<div class="add-todo-hint" v-bind:class="{'show': newTodoTitle.length > 0}">Press <kbd>Enter</kbd> to add your todo</div>
 		<hr>
 		<div class="todo-list">
 			<Todo v-for="(todo, i) in todos" :key="i" v-bind:todo="todo"></Todo>
@@ -18,29 +19,41 @@ export default {
 	name: 'todoList',
 	data () {
 		return {
+			newTodoTitle: '',
 			searchActive: false,
 			todos: [
 				{
 					done: false,
-					title: 'Test TODO'
+					title: 'Test TODO',
+					timestamp: new Date('2017-7-19 18:30:34')
 				},
 				{
 					done: true,
-					title: 'Test TODO'
-				},
-				{
-					done: true,
-					title: 'Test TODO'
+					title: 'Test TODO',
+					timestamp: new Date('2017-7-1')
 				},
 				{
 					done: false,
-					title: 'Test TODO'
-				},
-				{
-					done: false,
-					title: 'Test TODO'
+					title: 'Test TODO',
+					timestamp: new Date('2017-6-1')
 				}
 			]
+		}
+	},
+	methods: {
+		addTodo: function() {
+			let processedTitle = this.newTodoTitle.trim()
+			if (processedTitle.length > 0) {
+				console.log(processedTitle)
+
+				this.todos.push({
+					done: false,
+					title: processedTitle,
+					timestamp: new Date()
+				})
+			}
+
+			this.newTodoTitle = ''
 		}
 	},
 	components: {
@@ -59,6 +72,8 @@ export default {
 	overflow: hidden;
 
 	hr {
+		margin: 0;
+
 		border: none;
 		border-top: 1px solid rgba(#444, .2);
 	}
@@ -99,6 +114,30 @@ export default {
 			&:focus, &:active {
 				outline: none;
 			}
+		}
+	}
+
+	.add-todo-hint {
+		margin: 0 1rem 1rem;
+		height: 0;
+
+		font-size: .8em;
+		color: rgba(#444, .8);
+
+		overflow: hidden;
+
+		transition: .3s height;
+
+		&.show {
+			padding: .3em 0;
+			height: 1em;
+		}
+
+		kbd {
+			padding: .1em;
+
+			border: 1px solid rgba(#444, .2);
+			border-radius: 4px;
 		}
 	}
 }

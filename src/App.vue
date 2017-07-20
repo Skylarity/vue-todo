@@ -20,6 +20,8 @@ body {
 
 $font-family: 'Cabin', 'Avenir', Helvetica, Arial, sans-serif;
 
+$font-dark: #444;
+
 #app {
 	font-family: $font-family;
 	-webkit-font-smoothing: antialiased;
@@ -30,6 +32,8 @@ $font-family: 'Cabin', 'Avenir', Helvetica, Arial, sans-serif;
 	justify-content: center;
 
 	min-height: 100vh;
+
+	color: $font-dark;
 }
 
 input {
