@@ -7,14 +7,22 @@
 		<div class="add-todo-hint" v-bind:class="{'show': newTodoTitle.length > 0}">Press <kbd>Enter</kbd> to add your todo</div>
 		<hr>
 		<div class="todo-list">
-			<div v-for="(todo, i) in sortedTodos" :key="i" class="todo-container">
+			<div v-for="(todo, i) in sortedTodos.active" :key="i" class="todo-container">
 				<Todo v-bind:todo="todo" class="todo"></Todo>
 				<div class="todo-functions">
 					<button class="todo-function todo-remove" @click="function() {removeTodo(todo.index)}"><icon name="close" scale="0.75"></icon></button>
 					<button class="todo-function todo-edit" @click="function() {editTodo(todo.index)}"><icon name="pencil" scale="0.75"></icon></button>
 				</div>
 			</div>
-			<div class="empty-list" v-if="allDone">
+			<hr v-if="sortedTodos.done.length > 0 && sortedTodos.active.length > 0">
+			<div v-for="(todo, i) in sortedTodos.done" :key="i" class="todo-container">
+				<Todo v-bind:todo="todo" class="todo"></Todo>
+				<div class="todo-functions">
+					<button class="todo-function todo-remove" @click="function() {removeTodo(todo.index)}"><icon name="close" scale="0.75"></icon></button>
+					<button class="todo-function todo-edit" @click="function() {editTodo(todo.index)}"><icon name="pencil" scale="0.75"></icon></button>
+				</div>
+			</div>
+			<div class="empty-list" v-if="noTodos">
 				<p>
 					<icon name="smile-o"></icon> Nothing to do!
 				</p>
@@ -23,7 +31,7 @@
 				</p>
 			</div>
 		</div>
-		<div class="functions" v-if="!allDone">
+		<div class="functions" v-if="!noTodos">
 			<span class="function remove-done" @click="removeDone">
 				Remove done
 			</span>
@@ -79,7 +87,7 @@ export default {
 		}
 	},
 	computed: {
-		allDone: function() {
+		noTodos: function() {
 			return this.todos.length <= 0
 		},
 		sortedTodos: function() {
@@ -97,7 +105,10 @@ export default {
 				return a.timestamp.getTime() < b.timestamp.getTime()
 			})
 
-			return active.concat(done)
+			return {
+				active: active,
+				done: done
+			}
 		}
 	},
 	components: {
