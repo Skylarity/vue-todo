@@ -10,8 +10,9 @@
 			<div v-for="(todo, i) in sortedTodos.active" :key="i" class="todo-container active">
 				<Todo v-bind:todo="todo" class="todo"></Todo>
 				<div class="todo-functions">
-					<button class="todo-function todo-remove" @click="function() {removeTodo(todo.index)}"><icon name="close" scale="0.75"></icon></button>
-					<button class="todo-function todo-edit" @click="function() {editTodo(todo.index)}"><icon name="pencil" scale="0.75"></icon></button>
+					<button v-if="!todo.editing" class="todo-function todo-remove" @click="function() {removeTodo(todo.index)}"><icon name="close" scale="0.75"></icon></button>
+					<button v-if="!todo.editing" class="todo-function todo-edit" @click="function() {editTodo(todo.index)}"><icon name="pencil" scale="0.75"></icon></button>
+					<button v-if="todo.editing" class="todo-function todo-edit" @click="function() {saveTodo(todo.index)}"><icon name="save" scale="0.75"></icon></button>
 				</div>
 			</div>
 			<hr v-if="sortedTodos.done.length > 0 && sortedTodos.active.length > 0">
