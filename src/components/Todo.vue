@@ -5,10 +5,11 @@
 			<div class="check"><icon name="check"></icon></div>
 		</label>
 		<div class="todo-info" @dblclick="beginEditing">
-			<div v-if="!todo.editing" class="title"><icon name="exclamation-triangle" scale=".75" v-if="status === 'danger'"></icon>{{ todo.title }}</div>
+			<div v-if="!todo.editing" class="title">{{ todo.title }}</div>
 			<input v-if="todo.editing" @keyup.enter="finishEditing" class="title-edit" type="text" v-model="todo.title">
 			<div class="date">added {{ todoDate }}</div>
 		</div>
+		<icon class="warn" name="exclamation-triangle" scale="2" v-if="status === 'warning' || status === 'danger'"></icon>
 	</div>
 </template>
 
@@ -86,28 +87,32 @@ export default {
 			text-decoration: line-through;
 		}
 
-		background: $success;
+		// background: $success;
 	}
 
 	&.warning {
-		background: $warning;
+		.fa-icon.warn {
+			margin: 0 .25rem 0 .5rem;
+			color: $warning;
+		}
+		// background: $warning;
 	}
 
 	&.danger {
-		color: #fff;
-		background: $danger;
-
-		.date {
-			color: #fff !important;
+		.fa-icon.warn {
+			margin: 0 .25rem 0 .5rem;
+			color: $danger;
 		}
+		// color: #fff;
+		// background: $danger;
+
+		// .date {
+		// 	color: #fff !important;
+		// }
 	}
 
 	&:last-child {
 		padding-bottom: 1rem;
-	}
-
-	input[type=checkbox] {
-		//
 	}
 
 	.todo-info {
@@ -162,7 +167,8 @@ export default {
 		}
 
 		input:checked + .check {
-			border: 10px solid rgba(#fff, .9);
+			// border: 10px solid rgba(#fff, .9);
+			border: 10px solid rgba(#444, .6);
 		}
 
 		.check .fa-icon {
