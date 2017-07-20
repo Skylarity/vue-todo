@@ -18,8 +18,9 @@
 			<div v-for="(todo, i) in sortedTodos.done" :key="i" class="todo-container">
 				<Todo v-bind:todo="todo" class="todo"></Todo>
 				<div class="todo-functions">
-					<button class="todo-function todo-remove" @click="function() {removeTodo(todo.index)}"><icon name="close" scale="0.75"></icon></button>
-					<button class="todo-function todo-edit" @click="function() {editTodo(todo.index)}"><icon name="pencil" scale="0.75"></icon></button>
+					<button v-if="!todo.editing" class="todo-function todo-remove" @click="function() {removeTodo(todo.index)}"><icon name="close" scale="0.75"></icon></button>
+					<button v-if="!todo.editing" class="todo-function todo-edit" @click="function() {editTodo(todo.index)}"><icon name="pencil" scale="0.75"></icon></button>
+					<button v-if="todo.editing" class="todo-function todo-edit" @click="function() {saveTodo(todo.index)}"><icon name="save" scale="0.75"></icon></button>
 				</div>
 			</div>
 			<div class="empty-list" v-if="noTodos">
@@ -76,6 +77,9 @@ export default {
 		},
 		editTodo: function(i) {
 			this.todos[i].editing = true;
+		},
+		saveTodo: function(i) {
+			this.todos[i].editing = false;
 		},
 		removeTodo: function(i) {
 			this.todos.splice(i, 1)
