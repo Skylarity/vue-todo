@@ -43,9 +43,9 @@ export default {
 
 <style scoped lang="scss">
 
-$success: #81c784;
-$warning: #fdd835;
-$danger: #e53935;
+$success: #4fa;
+$warning: #fe4;
+$danger: #f40;
 
 .todo {
 	display: flex;

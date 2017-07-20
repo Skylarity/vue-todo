@@ -14,7 +14,7 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Cabin');
 
 body {
-	background: linear-gradient(to bottom right, #444, #222);
+	background: linear-gradient(to bottom right, #74ebd5, #ACB6E5);
 	min-height: 100vh;
 }
 
