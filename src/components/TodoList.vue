@@ -7,7 +7,26 @@
 		<div class="add-todo-hint" v-bind:class="{'show': newTodoTitle.length > 0}">Press <kbd>Enter</kbd> to add your todo</div>
 		<hr>
 		<div class="todo-list">
-			<Todo v-for="(todo, i) in todos" :key="i" v-bind:todo="todo"></Todo>
+			<div v-for="(todo, i) in sortedTodos" :key="i" class="todo-container">
+				<Todo v-bind:todo="todo" class="todo"></Todo>
+				<div class="todo-functions">
+					<button class="todo-function todo-remove" @click="function() {removeTodo(todo.index)}"><icon name="close" scale="0.75"></icon></button>
+					<button class="todo-function todo-edit" @click="function() {editTodo(todo.index)}"><icon name="pencil" scale="0.75"></icon></button>
+				</div>
+			</div>
+			<div class="empty-list" v-if="allDone">
+				<p>
+					<icon name="smile-o"></icon> Nothing to do!
+				</p>
+				<p>
+					Add a todo to get started.
+				</p>
+			</div>
+		</div>
+		<div class="functions" v-if="!allDone">
+			<span class="function remove-done" @click="removeDone">
+				Remove done
+			</span>
 		</div>
 	</div>
 </template>
@@ -17,27 +36,18 @@ import Todo from './Todo'
 
 export default {
 	name: 'todoList',
-	data () {
+	data() {
 		return {
 			newTodoTitle: '',
 			searchActive: false,
-			todos: [
-				{
-					done: false,
+			todos: [0, 0, 0, 0, 0].map(function(todo) {
+				return {
 					title: 'Test TODO',
-					timestamp: new Date('2017-7-19 18:30:34')
-				},
-				{
-					done: true,
-					title: 'Test TODO',
-					timestamp: new Date('2017-7-1')
-				},
-				{
-					done: false,
-					title: 'Test TODO',
-					timestamp: new Date('2017-6-1')
+					done: Math.random() > .5 ? true : false,
+					timestamp: new Date('2017-' + (Math.ceil(Math.random() * 2) + 5) + '-' + Math.ceil(Math.random() * 20)),
+					editing: false
 				}
-			]
+			})
 		}
 	},
 	methods: {
@@ -49,11 +59,45 @@ export default {
 				this.todos.push({
 					done: false,
 					title: processedTitle,
-					timestamp: new Date()
+					timestamp: new Date(),
+					editing: false
 				})
 			}
 
 			this.newTodoTitle = ''
+		},
+		editTodo: function(i) {
+			this.todos[i].editing = true;
+		},
+		removeTodo: function(i) {
+			this.todos.splice(i, 1)
+		},
+		removeDone: function() {
+			this.todos = this.todos.filter(function(todo) {
+				return !todo.done
+			})
+		}
+	},
+	computed: {
+		allDone: function() {
+			return this.todos.length <= 0
+		},
+		sortedTodos: function() {
+			let active = []
+			let done = []
+			this.todos.forEach(function(todo, i) {
+				todo.index = i
+				todo.done ? done.push(todo) : active.push(todo)
+			})
+
+			active.sort(function(a, b) {
+				return a.timestamp.getTime() < b.timestamp.getTime()
+			})
+			done.sort(function(a, b) {
+				return a.timestamp.getTime() < b.timestamp.getTime()
+			})
+
+			return active.concat(done)
 		}
 	},
 	components: {
@@ -64,7 +108,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import '../assets/scss/variables';
+
 #todoListContainer {
+	margin: 2rem;
+
 	background: rgba(#fff, .8);
 
 	border-radius: 1rem;
@@ -118,7 +166,7 @@ export default {
 	}
 
 	.add-todo-hint {
-		margin: 0 1rem 1rem;
+		margin: 0 1rem;
 		height: 0;
 
 		font-size: .8em;
@@ -126,9 +174,10 @@ export default {
 
 		overflow: hidden;
 
-		transition: .3s height;
+		transition: .3s all;
 
 		&.show {
+			margin-bottom: 1rem;
 			padding: .3em 0;
 			height: 1em;
 		}
@@ -138,6 +187,83 @@ export default {
 
 			border: 1px solid rgba(#444, .2);
 			border-radius: 4px;
+		}
+	}
+
+	.todo-list {
+		display: flex;
+		flex-direction: column;
+
+		.todo-container {
+			display: flex;
+
+			&:hover {
+				.todo-functions {
+					padding: .5rem;
+					right: 0;
+					opacity: 1;
+				}
+			}
+
+			.todo {
+				flex-grow: 1;
+			}
+
+			.todo-functions {
+				display: flex;
+				position: relative;
+				padding: .5rem;
+				right: -200px;
+
+				transition: .3s all;
+
+				.todo-function {
+
+					color: #444;
+
+					background: transparent;
+
+					border: none;
+
+					cursor: pointer;
+
+					overflow: hidden;
+
+					transition: .3s all;
+
+					&:focus, &:active {
+						outline: none;
+					}
+				}
+			}
+		}
+
+		.empty-list {
+			padding: 1rem;
+			color: rgba(#444, .5);
+			text-align: center;
+		}
+	}
+
+	.functions {
+		padding: .25rem 1rem;
+
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+
+		.function {
+			font-size: .7rem;
+			color: rgba(#444, .7);
+
+			transition: .3s all;
+
+			cursor: pointer;
+
+			&:hover {
+				color: rgba(#444, 1);
+			}
 		}
 	}
 }

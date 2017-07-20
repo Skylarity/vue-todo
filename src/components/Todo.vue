@@ -4,8 +4,9 @@
 			<input type="checkbox" name="done" v-model="todo.done">
 			<div class="check"><icon name="check"></icon></div>
 		</label>
-		<div class="todo-info">
-			<div class="title"><icon name="exclamation-triangle" scale=".75" v-if="status === 'danger'"></icon>{{ todo.title }}</div>
+		<div class="todo-info" @dblclick="beginEditing">
+			<div v-if="!todo.editing" class="title"><icon name="exclamation-triangle" scale=".75" v-if="status === 'danger'"></icon>{{ todo.title }}</div>
+			<input v-if="todo.editing" @keyup.enter="finishEditing" class="title-edit" type="text" v-model="todo.title">
 			<div class="date">added {{ todoDate }}</div>
 		</div>
 	</div>
@@ -17,6 +18,28 @@ import moment from 'moment'
 export default {
 	name: 'todo',
 	props: ['todo'],
+	data() {
+		return {
+			oldTitle: ''
+		}
+	},
+	methods: {
+		beginEditing: function() {
+			this.todo.editing = true
+
+			this.oldTitle = this.todo.title
+		},
+		finishEditing: function() {
+			this.todo.editing = false
+
+			let processedTitle = this.todo.title.trim()
+			if (processedTitle.length <= 0) {
+				this.todo.title = this.oldTitle
+			}
+
+			this.oldTitle = ''
+		}
+	},
 	computed: {
 		todoDate: function() {
 			return moment(this.todo.timestamp, 'YYYYMMDD').fromNow()
@@ -42,15 +65,19 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-$success: #4fa;
-$warning: #fe4;
-$danger: #f40;
+@import '../assets/scss/variables';
 
 .todo {
 	display: flex;
 
 	padding: 1rem 2rem .5rem;
+
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	cursor: pointer;
 
 	transition: .3s all;
 
@@ -85,12 +112,30 @@ $danger: #f40;
 
 	.todo-info {
 		margin-left: .5rem;
+		width: 100%;
 
 		.title {
 			flex-grow: 1;
 
 			.fa-icon {
 				margin-right: .25rem;
+			}
+		}
+
+		.title-edit {
+			padding: .25rem .5rem;
+			width: 100%;
+
+			background: rgba(#444, .1);
+			border: none;
+			border-radius: 4px;
+
+			transition: .3s all;
+
+			&:active, &:focus {
+				outline: none;
+
+				background: rgba(#fff, .9);
 			}
 		}
 
